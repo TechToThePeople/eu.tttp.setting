@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<extension key="eu.tttp.setting" type="module">
+  <file>setting</file>
+  <name>Manage the settings (via API)</name>
+  <description>That's a close to the metal interface. It's main usage is to see what settings (the ones managed by the api) are different from the default, and reverse them</description>
+  <license>aGPL3</license>
+  <maintainer>
+    <author>Xavier Dutoit</author>
+    <email>civi@tttp.eu</email>
+  </maintainer>
+  <releaseDate>2012-10-19</releaseDate>
+  <version>1.0</version>
+  <develStage>alpha</develStage>
+  <compatibility>
+    <ver>4.3</ver>
+  </compatibility>
+  <comments>So Eileen asks, and we do</comments>
+  <civix>
+    <namespace>CRM/Setting</namespace>
+  </civix>
+</extension>

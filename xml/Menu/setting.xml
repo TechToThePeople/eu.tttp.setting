@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<menu>
+  <item>
+    <path>civicrm/admin/setting</path>
+    <page_callback>CRM_Setting_Page_eu.tttp.settings</page_callback>
+    <title>eu.tttp.settings</title>
+    <access_arguments>access CiviCRM</access_arguments>
+  </item>
+</menu>
