@@ -2,8 +2,8 @@
 <menu>
   <item>
     <path>civicrm/admin/setting</path>
-    <page_callback>CRM_Setting_Page_eu.tttp.settings</page_callback>
-    <title>eu.tttp.settings</title>
-    <access_arguments>access CiviCRM</access_arguments>
+    <page_callback>CRM_Setting_Page_apisettings</page_callback>
+    <title>API settings</title>
+    <access_arguments>administer CiviCRM</access_arguments>
   </item>
 </menu>
