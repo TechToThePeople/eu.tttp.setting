@@ -1,4 +1,6 @@
 <div id="help">
+Should we display all the settings, including the ones that don't have a default?
+<br>Should we make editable the ones that are of type string?
 </div>
 <table class="report">
 <th>Setting</th>
