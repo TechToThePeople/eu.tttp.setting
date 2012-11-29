@@ -18,15 +18,23 @@ class CRM_Setting_Page_apisettings extends CRM_Core_Page {
     }
     //using the php form rather than class so I can do the array intersect - X probably has
     // a better way
-    $domains = civicrm_api('domain', 'get', array('version' => 3));
-    if(is_array($domain_ids)){
-      $domains = array_intersect_key($domains['values'], array_flip($domain_ids));
-      $extraParams['domain_id'] = $domain_ids;
+    if(empty($domain_ids[0])){
+      $domains = civicrm_api('domain', 'get', array('version' => 3, 'current_domain' => 1));
+      $domains = $domains['values'];
+    }
+    else{
+      $domains = civicrm_api('domain', 'get', array('version' => 3));
+      $domains = $domains['values'];
+
+      if(is_array($domain_ids) && !empty($domain_ids) && !empty($domain_ids[0])){
+        dpm($domain_ids);
+        $domains = array_intersect_key($domains, array_flip($domain_ids));
+        $extraParams['domain_id'] = $domain_ids;
+      }
     }
 
     $api->Setting->getfields (array('sequential'=> 0) + $extraParams );
     $fields =  $api->values;
-
     $api->Setting->get (array('sequential'=> 0) + $extraParams );
     $settings = $api->values;
     $this->assign_by_ref('fields', $fields);

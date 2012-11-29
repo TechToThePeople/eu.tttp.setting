@@ -70,7 +70,7 @@ function setting_civicrm_managed(&$entities) {
 }
 
 function setting_civicrm_alterSettingsMetaData(&$settingsMetadata, $domainID){
-  $profile = CRM_Utils_Request::retrieve('filters', 'String',
+  $profile = CRM_Utils_Request::retrieve('profile', 'String',
       $this, FALSE, Null, 'GET');
 
   // probably not the best pattern but for demo purposes...
