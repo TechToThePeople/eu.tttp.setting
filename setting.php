@@ -70,7 +70,7 @@ function setting_civicrm_managed(&$entities) {
 }
 
 function setting_civicrm_alterSettingsMetaData(&$settingsMetadata, $domainID){
-  $profile = CRM_Utils_Request::retrieve('profile', 'String',
+  $profile = CRM_Utils_Request::retrieve('filters', 'String',
       $this, FALSE, Null, 'GET');
 
   // probably not the best pattern but for demo purposes...
@@ -82,6 +82,7 @@ function setting_civicrm_alterSettingsMetaData(&$settingsMetadata, $domainID){
     $settingsMetadata['countryLimit']['profile'] = 'nz';
     $settingsMetadata['provinceLimit']['default'] = Array (1154 );
     $settingsMetadata['provinceLimit']['profile'] = 'nz';
+    return 'settingapi' . $profile;
   }
 
   if($profile == 'ca'){
@@ -91,6 +92,7 @@ function setting_civicrm_alterSettingsMetaData(&$settingsMetadata, $domainID){
     $settingsMetadata['countryLimit']['profile'] = 'ca';
     $settingsMetadata['provinceLimit']['default'] = Array (1039 );
     $settingsMetadata['provinceLimit']['profile'] = 'ca';
+    return 'settingapi' . $profile;
   }
-  return 'settingapi' . $profile;
+
 }

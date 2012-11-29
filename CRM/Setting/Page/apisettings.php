@@ -7,15 +7,14 @@ class CRM_Setting_Page_apisettings extends CRM_Core_Page {
   function run() {
     $api= new civicrm_api3();
     //we allow filters and domain ids to be passed in
-    $domain_ids = explode(',',CRM_Utils_Request::retrieve('domain','String',
-    $this, FALSE, Null, 'GET'));
-
-    $filters = explode(',',CRM_Utils_Request::retrieve('filters', 'String',
-      $this, FALSE, Null, 'GET'));
+    $domain_ids = explode(',',CRM_Utils_Request::retrieve('domain','String'));
+    $filters = explode(',',CRM_Utils_Request::retrieve('filters', 'String'));
     $extraParams = array();
     foreach ($filters as $filter){
-      $vals = explode(":", $filter);
-      $extraParams['filters'][$vals[0]] = $vals[1];
+      if(!empty($filter)){
+        $vals = explode(":", $filter);
+        $extraParams['filters'][$vals[0]] = $vals[1];
+      }
     }
     //using the php form rather than class so I can do the array intersect - X probably has
     // a better way
@@ -27,6 +26,7 @@ class CRM_Setting_Page_apisettings extends CRM_Core_Page {
 
     $api->Setting->getfields (array('sequential'=> 0) + $extraParams );
     $fields =  $api->values;
+
     $api->Setting->get (array('sequential'=> 0) + $extraParams );
     $settings = $api->values;
     $this->assign_by_ref('fields', $fields);
