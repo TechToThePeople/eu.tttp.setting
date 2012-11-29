@@ -6,22 +6,33 @@ require_once('api/class.api.php');
 class CRM_Setting_Page_apisettings extends CRM_Core_Page {
   function run() {
     $api= new civicrm_api3();
-    $api->Setting->getfields (array('sequential'=>0));
-    $f= $api->values;
-    $api->Setting->get (array('sequential'=>1));
-    foreach ($api->values[0] as $name => &$value) {
-      $f->$name->value = $value;
+    //we allow filters and domain ids to be passed in
+    $domain_ids = explode(',',CRM_Utils_Request::retrieve('domain','String',
+    $this, FALSE, Null, 'GET'));
+
+    $filters = explode(',',CRM_Utils_Request::retrieve('filters', 'String',
+      $this, FALSE, Null, 'GET'));
+    $extraParams = array();
+    foreach ($filters as $filter){
+      $vals = explode(":", $filter);
+      $extraParams['filters'][$vals[0]] = $vals[1];
     }
-    $properties = array ("type","title","value","default","description");
-    //properties need to be defined for each item, otherwise smarty ain't so happy
-    foreach ($f as $k => &$v) {
-      foreach ($properties as $property) {
-        if (!property_exists ($v,$property)) 
-          $v->$property = "";
-      }
+    //using the php form rather than class so I can do the array intersect - X probably has
+    // a better way
+    $domains = civicrm_api('domain', 'get', array('version' => 3));
+    if(is_array($domain_ids)){
+      $domains = array_intersect_key($domains['values'], array_flip($domain_ids));
+      $extraParams['domain_id'] = $domain_ids;
     }
-    $this->assign_by_ref('settings',$f); 
+
+    $api->Setting->getfields (array('sequential'=> 0) + $extraParams );
+    $fields =  $api->values;
+    $api->Setting->get (array('sequential'=> 0) + $extraParams );
+    $settings = $api->values;
+    $this->assign_by_ref('fields', $fields);
+    $this->assign_by_ref('settings', $settings);
+    $this->assign_by_ref('domains',$domains);
     parent::run();
-;
   }
 }
+

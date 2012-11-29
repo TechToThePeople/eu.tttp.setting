@@ -68,3 +68,29 @@ function setting_civicrm_upgrade($op, CRM_Queue_Queue $queue = NULL) {
 function setting_civicrm_managed(&$entities) {
   return _setting_civix_civicrm_managed($entities);
 }
+
+function setting_civicrm_alterSettingsMetaData(&$settingsMetadata, $domainID){
+  $profile = CRM_Utils_Request::retrieve('profile', 'String',
+      $this, FALSE, Null, 'GET');
+
+  // probably not the best pattern but for demo purposes...
+  if($profile == 'nz'){
+    $settingsMetadata['defaultCurrency']['default'] = 'NZD';
+    //the profile is just being set here for filtering
+    $settingsMetadata['defaultCurrency']['profile'] = 'nz';
+    $settingsMetadata['countryLimit']['default'] = array(1154);
+    $settingsMetadata['countryLimit']['profile'] = 'nz';
+    $settingsMetadata['provinceLimit']['default'] = Array (1154 );
+    $settingsMetadata['provinceLimit']['profile'] = 'nz';
+  }
+
+  if($profile == 'ca'){
+    $settingsMetadata['defaultCurrency']['default'] = 'CAD';
+    $settingsMetadata['defaultCurrency']['profile'] = 'ca';
+    $settingsMetadata['countryLimit']['default'] = array(1039);
+    $settingsMetadata['countryLimit']['profile'] = 'ca';
+    $settingsMetadata['provinceLimit']['default'] = Array (1039 );
+    $settingsMetadata['provinceLimit']['profile'] = 'ca';
+  }
+  return 'settingapi' . $profile;
+}

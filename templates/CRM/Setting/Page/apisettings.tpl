@@ -4,22 +4,48 @@ Should we display all the settings, including the ones that don't have a default
 </div>
 <table class="report">
 <th>Setting</th>
-<th>Your Site</th>
 <th>Default</th>
-{foreach from=$settings key=name item=setting}
-<tr class="entity" data-id="{$name}" data-type="{$setting->type}">
-    <td title="{$setting->title}">{$name}</td>
-    <td title="{$setting->description}" class="crmf-value">
-      {if is_object($setting->value)}
-        {$setting->value|@print_r}
+{foreach from=$domains key=domainid item=domain}
+  <th><p>{$domain.name}</p>
+    <p class="description">email: {$domain.domain_email}
+    <p class="description">phone: {$domain.domain_phone.phone}<p>
+    <p class="description">address: {$domain.domain_address.street_address}<br>
+    {$domain->domain_address.city}<br>
+    {$domain->domain_address.postal_code}</p>
+    <p class="description">from email: {$domain.from_name} {$domain.from_email}<p>
+  </th>
+{/foreach}
+
+
+{foreach from=$fields key=name item=field}
+  {if $field->name}
+    {assign var="fieldname" value=$field->name}
+  {else}
+    {assign var="fieldname" value='undefined'}
+  {/if}
+  <tr class="entity" data-id="{$name}" data-type="{$setting->type}">
+    <td title="{$field->title}"><p>{if $field->title}{$field->title}{else}{$field->name}{/if}</p>
+    <p class="description">{if $field->description}{$field->description}{/if}</p></td>
+    <td class="crmf-default">
+      {if is_array($field->default)}
+        {$field->default|@print_r:true}
       {else}
-        {if is_array($setting->value)}{$setting->value|@print_r}
-          {else}{$setting->value}
-        {/if}
-      {/if}
-</td>
-    <td class="crmf-default">{$setting->default}</td>
-    <td><a class="button revert">{ts}Revert{/ts}</span></a></td>
+        {$field->default}
+      {/if}</td>
+    {foreach from=$domains key=domainid item=domain}
+      <td title="{$field->description}" class="crmf-value crm-entity-setting" data-id="{$domainid}"><p>
+        {if is_array($settings->$domainid->$fieldname) ||
+            is_object($settings->$domainid->$fieldname) }
+          {$settings->$domainid->$fieldname|@print_r:true}
+        {elseif $field->type == 'String' ||  $field->type == 'String'}
+        <span class="crmf-{$fieldname} crm-editable" data-action="create">{$settings->$domainid->$fieldname}</span>
+         {else}
+          {$settings->$domainid->$fieldname}
+        {/if}</p>
+        {if $settings->$domainid->$fieldname != $field->default}<span>
+          <a class="button revert">{ts}Revert{/ts}</span></a>{/if}
+    </td>
+    {/foreach}
 </tr>
 {/foreach}
 </table>
@@ -30,10 +56,12 @@ cj (function($){
   $(".revert").click(function(){
     var $tr=$(this).closest(".entity");
     var name=$tr.data("id");
-    $().crmAPI("setting","revert",{"name":name},{
+    var $td=$(this).closest(".crmf-value");
+    var domain=$td.data("id");
+    $().crmAPI("setting","revert",{"name":name , "domain_id":domain},{
       success:function(data) {
-        $tr.find('.crmf-value').html("reset to default"); 
-        $tr.find('.revert').remove(); 
+    	  $td.html("reset to default");
+        $tr.find('.revert').remove();
       }
     });
 console.log(name);
