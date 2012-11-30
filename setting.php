@@ -69,30 +69,47 @@ function setting_civicrm_managed(&$entities) {
   return _setting_civix_civicrm_managed($entities);
 }
 
-function setting_civicrm_alterSettingsMetaData(&$settingsMetadata, $domainID){
-  $profile = CRM_Utils_Request::retrieve('profile', 'String',
-      $this, FALSE, Null, 'GET');
+function setting_civicrm_alterSettingsMetaData(&$settingsMetadata, $domainID, $profile){
 
-  // probably not the best pattern but for demo purposes...
-  if($profile == 'nz'){
-    $settingsMetadata['defaultCurrency']['default'] = 'NZD';
-    //the profile is just being set here for filtering
-    $settingsMetadata['defaultCurrency']['profile'] = 'nz';
-    $settingsMetadata['countryLimit']['default'] = array(1154);
-    $settingsMetadata['countryLimit']['profile'] = 'nz';
-    $settingsMetadata['provinceLimit']['default'] = Array (1154 );
-    $settingsMetadata['provinceLimit']['profile'] = 'nz';
-    return 'settingapi' . $profile;
-  }
+  switch ($profile){
+    case 'nz' :  // probably not the best pattern but for demo purposes...
+      $settingsMetadata['defaultCurrency']['default'] = 'NZD';
+      //the profile is just being set here for filtering
+      $settingsMetadata['defaultCurrency']['profile'] = 'nz';
+      $settingsMetadata['countryLimit']['default'] = array(1154);
+      $settingsMetadata['countryLimit']['profile'] = 'nz';
+      $settingsMetadata['provinceLimit']['default'] = Array (1154 );
+      $settingsMetadata['provinceLimit']['profile'] = 'nz';
+      return 'settingapi' . $profile;
 
-  if($profile == 'ca'){
-    $settingsMetadata['defaultCurrency']['default'] = 'CAD';
-    $settingsMetadata['defaultCurrency']['profile'] = 'ca';
-    $settingsMetadata['countryLimit']['default'] = array(1039);
-    $settingsMetadata['countryLimit']['profile'] = 'ca';
-    $settingsMetadata['provinceLimit']['default'] = Array (1039 );
-    $settingsMetadata['provinceLimit']['profile'] = 'ca';
-    return 'settingapi' . $profile;
+    case 'ca':
+      $settingsMetadata['defaultCurrency']['default'] = 'CAD';
+      $settingsMetadata['defaultCurrency']['profile'] = 'ca';
+      $settingsMetadata['countryLimit']['default'] = array(1039);
+      $settingsMetadata['countryLimit']['profile'] = 'ca';
+      $settingsMetadata['provinceLimit']['default'] = Array (1039 );
+      $settingsMetadata['provinceLimit']['profile'] = 'ca';
+      return 'settingapi' . $profile;
+
+    case 'dev':
+      $settingsMetadata['debug_enabled']['default'] = '1';
+      $settingsMetadata['debug_enabled']['profile'] = 'dev';
+      $settingsMetadata['backtrace']['default'] = 1;
+      $settingsMetadata['backtrace']['profile'] = 'dev';
+      return 'settingapi' . $profile;
+
+    case 'server':
+      $mailingObj = new stdClass();
+      $mailingObj->outBound_option = 0;
+      $mailingObj->sendmail_path = '/usr/sbin/sendmail';
+      $mailingObj->sendmail_args = '-i';
+      $mailingObj->smtpServer = 'localhost';
+      $mailingObj->smtpPort = 25;
+      $mailingObj->smtpAuth = 0;
+      $mailingObj->smtpUsername = administrator;
+      $settingsMetadata['mailing_backend']['default'] =$mailingObj;
+      $settingsMetadata['mailing_backend']['profile'] = 'server';
+      return 'settingapi' . $profile;
   }
 
 }

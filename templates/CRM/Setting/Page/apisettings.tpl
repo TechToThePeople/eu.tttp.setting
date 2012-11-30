@@ -1,6 +1,10 @@
 <div id="help">
-Should we display all the settings, including the ones that don't have a default?
-<br>Should we make editable the ones that are of type string?
+<p>You are looking at Profile {$profile} for domain {$domain}</p>
+<p>Choose a profile .... (these are mostly for demo purposes)
+{foreach from=$availableProfiles item=avprofile}
+<a href="{crmURL p='civicrm/admin/setting' h=0 q="profile=$avprofile&domain=$domainstring&filters=profile:$avprofile" }">{$avprofile}</a>
+{/foreach}
+</p>
 </div>
 <table class="report">
 <th>Setting</th>
@@ -27,13 +31,13 @@ Should we display all the settings, including the ones that don't have a default
     <td title="{$field->title}"><p>{if $field->title}{$field->title}{else}{$field->name}{/if}</p>
     <p class="description">{if $field->description}{$field->description}{/if}</p></td>
     <td class="crmf-default">
-      {if is_array($field->default)}
+      {if is_array($field->default) || is_object($field->default)}
         {$field->default|@print_r:true}
       {else}
         {$field->default}
       {/if}</td>
     {foreach from=$domains key=domainid item=domain}
-      <td title="{$field->description}" class="crmf-value crm-entity-setting" data-id="{$domainid}"><p>
+      <td title="{$field->description}" class="crmf-value crm-entity-setting" data-id="{$domainid}" data-profile="{$profile}"><p>
         {if is_array($settings->$domainid->$fieldname) ||
             is_object($settings->$domainid->$fieldname) }
           {$settings->$domainid->$fieldname|@print_r:true}
@@ -58,7 +62,8 @@ cj (function($){
     var name=$tr.data("id");
     var $td=$(this).closest(".crmf-value");
     var domain=$td.data("id");
-    $().crmAPI("setting","revert",{"name":name , "domain_id":domain},{
+    var profile=$td.data("profile");
+    $().crmAPI("setting","revert",{"name":name , "domain_id":domain, "profile":profile},{
       success:function(data) {
     	  $td.html("reset to default");
         $tr.find('.revert').remove();
