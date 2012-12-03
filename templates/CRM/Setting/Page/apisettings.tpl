@@ -1,6 +1,6 @@
 <div id="help">
 <p>You are looking at Profile {$profile} for domain {$domain}</p>
-<p>Choose a profile .... (these are mostly for demo purposes)
+<p>Choose a profile .... (these are mostly for demo purposes). You can store your own profile in templates_c/../profiles to use your own settings
 {foreach from=$availableProfiles item=avprofile}
 <a href="{crmURL p='civicrm/admin/setting' h=0 q="profile=$avprofile&domain=$domainstring&filters=profile:$avprofile" }">{$avprofile}</a>
 {/foreach}
@@ -65,8 +65,8 @@ cj (function($){
     var profile=$td.data("profile");
     $().crmAPI("setting","revert",{"name":name , "domain_id":domain, "profile":profile},{
       success:function(data) {
-    	  $td.html("reset to default");
-        $tr.find('.revert').remove();
+        $td.html("reset to default");
+        $td.find('.revert').remove();
       }
     });
 console.log(name);

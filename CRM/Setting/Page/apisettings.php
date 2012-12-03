@@ -12,7 +12,7 @@ class CRM_Setting_Page_apisettings extends CRM_Core_Page {
     $filters = explode(',',CRM_Utils_Request::retrieve('filters', 'String'));
     $profile = CRM_Utils_Request::retrieve('profile', 'String');
     $extraParams = array();
-    $availableProfiles = array('nz', 'ca', 'dev', 'server');
+    $availableProfiles = _setting_civicrm_getavailableprofiles();
     if(!empty($profile)){
       $extraParams['profile'] = $profile;
     }
