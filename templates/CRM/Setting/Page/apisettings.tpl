@@ -30,12 +30,20 @@
   <tr class="entity" data-id="{$name}" data-type="{$setting->type}">
     <td title="{$field->title}"><p>{if $field->title}{$field->title}{else}{$field->name}{/if}</p>
     <p class="description">{if $field->description}{$field->description}{/if}</p></td>
-    <td class="crmf-default">
+    <td class="crmf-default crmf-value crm-entity-setting crmf-{$fieldname}" data-id="all" data-profile="{$profile}">
       {if is_array($field->default) || is_object($field->default)}
-        {$field->default|@print_r:true}
+        {if $field->html_type eq 'checkboxes' && $field->options}
+          {foreach from=$field->default key=optionid item = option}
+            {$field->options.$option}
+          {/foreach}
+        {else}
+          {$field->default|@print_r:true}
+        {/if}
       {else}
         {$field->default}
-      {/if}</td>
+      {/if}
+      <br>
+      {if $domains|@count gt 0}<a class="button revert"><span>{ts}Revert All Domains{/ts}</span></a>{/if}</td>
     {foreach from=$domains key=domainid item=domain}
       <td title="{$field->description}" class="crmf-value crm-entity-setting" data-id="{$domainid}" data-profile="{$profile}"><p>
         {if is_array($settings->$domainid->$fieldname) ||

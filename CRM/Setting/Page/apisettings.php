@@ -11,6 +11,7 @@ class CRM_Setting_Page_apisettings extends CRM_Core_Page {
     $domain_ids = explode(',', $domainString);
     $filters = explode(',',CRM_Utils_Request::retrieve('filters', 'String'));
     $profile = CRM_Utils_Request::retrieve('profile', 'String');
+
     $extraParams = array();
     $availableProfiles = _setting_civicrm_getavailableprofiles();
     if(!empty($profile)){
@@ -47,6 +48,17 @@ class CRM_Setting_Page_apisettings extends CRM_Core_Page {
     $fields =  $api->values;
     $api->Setting->get (array('sequential'=> 0) + $extraParams );
     $settings = $api->values;
+
+    foreach($fields as &$field){
+      if($field->html_type == 'checkboxes'){
+        $field->options = array();
+        $options = civicrm_api('option_value' , 'get', array('version' => 3, 'option_group_name' => $field->pseudoconstant->optionGroupName));
+        foreach ($options['values'] as $option){
+          $field->options[$option['value']] = $option['label'];
+        }
+      }
+    }
+
     $this->assign_by_ref('fields', $fields);
     $this->assign_by_ref('settings', $settings);
     $this->assign_by_ref('domains',$domains);
