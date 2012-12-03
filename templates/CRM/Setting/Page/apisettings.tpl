@@ -43,7 +43,7 @@
         {$field->default}
       {/if}
       <br>
-      {if $domains|@count gt 0}<a class="button revert"><span>{ts}Revert All Domains{/ts}</span></a>{/if}</td>
+      {if $domains|@count gt 1}<a class="button revert"><span>{ts}Revert All Domains{/ts}</span></a>{/if}</td>
     {foreach from=$domains key=domainid item=domain}
       <td title="{$field->description}" class="crmf-value crm-entity-setting" data-id="{$domainid}" data-profile="{$profile}"><p>
         {if is_array($settings->$domainid->$fieldname) ||
