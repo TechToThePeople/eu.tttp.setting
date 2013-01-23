@@ -18,6 +18,29 @@ function setting_civicrm_xmlMenu(&$files) {
   _setting_civix_civicrm_xmlMenu($files);
 }
 
+
+function setting_civicrm_navigationMenu(&$params){
+  // can't rely on array if multidomain so query table
+  $maxKey = ( CRM_Core_DAO::singleValueQuery("SELECT max(id) FROM civicrm_navigation"));
+  //find administer id
+  foreach ($params as $key => $attributes){
+    if($attributes['attributes']['label'] == 'Administer'){
+      $adminID = $key;
+      continue;
+    }
+  }
+  $params[$adminID]['child'][$maxKey+1]['attributes'] = array (
+    'label'      => 'Configure Settings',
+    'name'       => 'Configure Settings',
+    'url'        => 'civicrm/admin/setting?domain=all',
+    'permission' => 'administer CiviCRM',
+    'operator'   => null,
+    'separator'  => null,
+    'parentID'   => $adminID,
+    'navID'      => $maxKey+1,
+    'active'     => 1
+  );
+}
 /**
  * Implementation of hook_civicrm_install
  */
