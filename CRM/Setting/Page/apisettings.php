@@ -50,7 +50,7 @@ class CRM_Setting_Page_apisettings extends CRM_Core_Page {
     $settings = $api->values;
 
     foreach($fields as &$field){
-      if($field->html_type == 'checkboxes'){
+      if(isset($field->html_type) && $field->html_type == 'checkboxes'){
         $field->options = array();
         $options = civicrm_api('option_value' , 'get', array('version' => 3, 'option_group_name' => $field->pseudoconstant->optionGroupName));
         foreach ($options['values'] as $option){
