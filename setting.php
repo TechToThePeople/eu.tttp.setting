@@ -103,7 +103,11 @@ function setting_civicrm_alterSettingsMetaData(&$settingsMetadata, $domainID, $p
     return $configured;
   }
 }
-
+/**
+ * Get profiles provided
+ *
+ * @return array profiles
+ */
 function _setting_civicrm_getavailableprofiles(){
   $filePaths = array(CIVICRM_TEMPLATE_COMPILEDIR . '../profiles', __DIR__ . '/profiles');
   $profiles = array();
@@ -111,7 +115,7 @@ function _setting_civicrm_getavailableprofiles(){
     if(is_dir($folder)){
       $files = CRM_Utils_File::findFiles($folder, '*.profile.php');
       foreach ($files as $file){
-        $profiles[] = include $file;
+        $profiles[] = require_once $file;
       }
     }
   }
