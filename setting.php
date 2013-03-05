@@ -110,7 +110,10 @@ function setting_civicrm_alterSettingsMetaData(&$settingsMetadata, $domainID, $p
  */
 function _setting_civicrm_getavailableprofiles(){
   $filePaths = array(CIVICRM_TEMPLATE_COMPILEDIR . '../profiles', __DIR__ . '/profiles');
-  $profiles = array();
+  static $profiles = array();
+  if(!empty($profiles)){
+    return $profiles;
+  }
   foreach ($filePaths as $folder){
     if(is_dir($folder)){
       $files = CRM_Utils_File::findFiles($folder, '*.profile.php');
