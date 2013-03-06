@@ -40,8 +40,9 @@ function setting_civicrm_navigationMenu(&$params){
     'navID'      => $maxKey+1,
     'active'     => 1
   );
-
-  $params[$adminID]['child'][$maxKey+1]['attributes'] = array (
+  $domainCount = civicrm_api('domain', 'getcount', array('version' => 3));
+  $multiDomain = $domainCount > 1 ? 1 : 0;
+  $params[$adminID]['child'][$maxKey+2]['attributes'] = array (
     'label'      => 'Configure MultiDomain Settings',
     'name'       => 'Configure MultiDomain Settings',
     'url'        => 'civicrm/admin/setting?domain=all',
@@ -49,8 +50,8 @@ function setting_civicrm_navigationMenu(&$params){
     'operator'   => null,
     'separator'  => null,
     'parentID'   => $adminID,
-    'navID'      => $maxKey+1,
-    'active'     => 1
+    'navID'      => $maxKey+2,
+    'active'     => $multiDomain,
   );
 
 }
