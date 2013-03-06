@@ -36,7 +36,7 @@
       {if is_array($field->default) || is_object($field->default)}
         {if $field->html_type eq 'checkboxes' && $field->options}
           {foreach from=$field->default key=optionid item = option}
-            {$field->options.$option}
+            {$field->options.$option}</br>
           {/foreach}
         {else}
           {$field->default|@print_r:true}
@@ -53,12 +53,20 @@
         <p>
         {if is_array($settings->$domainid->$fieldname) ||
             is_object($settings->$domainid->$fieldname) }
-          {$settings->$domainid->$fieldname|@print_r:true}
+          {if $field->html_type eq 'checkboxes' && $field->options}{strip}
+          <span class="crmf-{$fieldname}" data-type='checkboxes' data-options='{$field->options|@json_encode}' data-values={$settings->$domainid->$fieldname} data-action="create">
+              {foreach from=$settings->$domainid->$fieldname key=optionid item = option}
+                <span class='crmf-option' data-option={$option}>{$field->options.$option}</span></br>
+              {/foreach}
+             </span>{/strip}
+          {else}
+           {$settings->$domainid->$fieldname|@print_r:true}
+          {/if}
         {elseif $field->type == 'String' ||  $field->type == 'Integer'}
-          <span class="crmf-{$fieldname} crm-editable{if $field->html_type eq 'TextArea'}-textarea{/if} " data-action="create">{$settings->$domainid->$fieldname}</span>
+          <span class="crmf-{$fieldname} crm-editable" {if $field->html_type eq 'TextArea'}data-type='textarea' {/if}data-action="create">{$settings->$domainid->$fieldname}</span>
         {elseif $field->type == 'Boolean'}
           {assign var='custOptions' value="`$smarty.ldelim`\"0\":\"No\",\"1\":\"Yes\"`$smarty.rdelim`"}
-          <span class="crmf-{$fieldname} crm-editable editable_select" data-options='{$custOptions}' data-type='select' data-action="create">{if $settings->$domainid->$fieldname eq 1}Yes{else}No{/if}</span>
+          <span class="crmf-{$fieldname} crm-editable" data-options='{$custOptions}' data-type='select' data-action="create">{if $settings->$domainid->$fieldname eq 1}Yes{else}No{/if}</span>
         {else}
           {$settings->$domainid->$fieldname}
         {/if}</p>
