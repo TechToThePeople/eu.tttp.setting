@@ -32,6 +32,18 @@ function setting_civicrm_navigationMenu(&$params){
   $params[$adminID]['child'][$maxKey+1]['attributes'] = array (
     'label'      => 'Configure Settings',
     'name'       => 'Configure Settings',
+    'url'        => 'civicrm/admin/setting',
+    'permission' => 'administer CiviCRM',
+    'operator'   => null,
+    'separator'  => null,
+    'parentID'   => $adminID,
+    'navID'      => $maxKey+1,
+    'active'     => 1
+  );
+
+  $params[$adminID]['child'][$maxKey+1]['attributes'] = array (
+    'label'      => 'Configure MultiDomain Settings',
+    'name'       => 'Configure MultiDomain Settings',
     'url'        => 'civicrm/admin/setting?domain=all',
     'permission' => 'administer CiviCRM',
     'operator'   => null,
@@ -40,6 +52,7 @@ function setting_civicrm_navigationMenu(&$params){
     'navID'      => $maxKey+1,
     'active'     => 1
   );
+
 }
 /**
  * Implementation of hook_civicrm_install
