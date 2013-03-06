@@ -41,6 +41,8 @@
         {else}
           {$field->default|@print_r:true}
         {/if}
+      {elseif $field->type == 'Boolean'}
+        {if $field->default eq 1}Yes{else}No{/if}
       {else}
         {$field->default}
       {/if}
