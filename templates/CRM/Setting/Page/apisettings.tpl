@@ -1,3 +1,5 @@
+{include file="CRM/common/crmeditable.tpl"}
+
 <div id="help">
 <p>You are looking at Profile {$profile} for domain {$domain}</p>
 <p>Choose a profile .... (these are mostly for demo purposes). You can store your own profile in templates_c/../profiles to use your own settings
@@ -27,7 +29,7 @@
   {else}
     {assign var="fieldname" value='undefined'}
   {/if}
-  <tr class="entity" data-id="{$name}" data-type="{$setting->type}">
+  <tr class="setting" data-name="{$name}" data-type="{$setting->type}">
     <td title="{$field->title}"><p>{if $field->title}{$field->title}{else}{$field->name}{/if}</p>
     <p class="description">{if $field->description}{$field->description}{/if}</p></td>
     <td class="crmf-default crmf-value crm-entity-setting crmf-{$fieldname}" data-id="all" data-profile="{$profile}">
@@ -43,19 +45,26 @@
         {$field->default}
       {/if}
       <br>
-      {if $domains|@count gt 1}<a class="button revert"><span>{ts}Revert All Domains{/ts}</span></a>{/if}</td>
+      {if $domains|@count gt 1}<a class="button revert"><span>{ts}Revert All Domains{/ts}</span></a>
+      {/if}</td>
     {foreach from=$domains key=domainid item=domain}
-      <td title="{$field->description}" class="crmf-value crm-entity-setting" data-id="{$domainid}" data-profile="{$profile}"><p>
+      <span class="crm-entity" id="setting-{$domainid}"></span>
+      <td title="{$field->description}" class="crmf-value crm-entity-setting crm-entity" id="setting-{$domainid}" data-id="{$domainid}">
+        <p>
         {if is_array($settings->$domainid->$fieldname) ||
             is_object($settings->$domainid->$fieldname) }
           {$settings->$domainid->$fieldname|@print_r:true}
-        {elseif $field->type == 'String' ||  $field->type == 'String'}
-        <span class="crmf-{$fieldname} crm-editable" data-action="create">{$settings->$domainid->$fieldname}</span>
-         {else}
+        {elseif $field->type == 'String' ||  $field->type == 'Integer'}
+          <span class="crmf-{$fieldname} crm-editable{if $field->html_type eq 'TextArea'}-textarea{/if} " data-action="create">{$settings->$domainid->$fieldname}</span>
+        {elseif $field->type == 'Boolean'}
+          {assign var='custOptions' value="`$smarty.ldelim`\"0\":\"No\",\"1\":\"Yes\"`$smarty.rdelim`"}
+          <span class="crmf-{$fieldname} crm-editable editable_select" data-options='{$custOptions}' data-type='select' data-action="create">{if $settings->$domainid->$fieldname eq 1}Yes{else}No{/if}</span>
+        {else}
           {$settings->$domainid->$fieldname}
         {/if}</p>
-        {if $settings->$domainid->$fieldname != $field->default}<span>
-          <a class="button revert">{ts}Revert{/ts}</span></a>{/if}
+        {if $settings->$domainid->$fieldname != $field->default}
+        <span>
+          <a class="button revert">{ts}Revert{/ts}</a></span>{/if}
     </td>
     {/foreach}
 </tr>
@@ -66,8 +75,8 @@
 {literal}
 cj (function($){
   $(".revert").click(function(){
-    var $tr=$(this).closest(".entity");
-    var name=$tr.data("id");
+    var $tr=$(this).closest(".setting");
+    var name=$tr.data("name");
     var $td=$(this).closest(".crmf-value");
     var domain=$td.data("id");
     var profile=$td.data("profile");
