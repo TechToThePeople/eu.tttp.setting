@@ -51,7 +51,7 @@
       {/if}</td>
     {foreach from=$domains key=domainid item=domain}
       <span class="crm-entity" id="setting-{$domainid}"></span>
-      <td title="{$field->description}" class="crmf-value crm-entity-setting crm-entity" id="setting-{$domainid}" data-id="{$domainid}">
+      <td title="{$field->description}" class="crmf-value crm-entity-setting crm-entity" id="setting-{$domainid}" data-id="{$domainid}" data-profile="{$profile}">
         <p>
         {if is_array($settings->$domainid->$fieldname) ||
             is_object($settings->$domainid->$fieldname) }
