@@ -2,7 +2,7 @@
 <extension key="eu.tttp.setting" type="module">
   <file>setting</file>
   <name>CiviConfigure</name>
-  <description>Get an overview of settings versus the defaults, set defaults by profile, edit or revert settings/description>
+  <description>Get an overview of settings versus the defaults, set defaults by profile, edit or revert settings</description>
   <license>aGPL3</license>
    <urls>
     <url desc="Main Extension Page">http://civicrm.org</url>
