@@ -18,6 +18,43 @@ function setting_civicrm_xmlMenu(&$files) {
   _setting_civix_civicrm_xmlMenu($files);
 }
 
+
+function setting_civicrm_navigationMenu(&$params){
+  // can't rely on array if multidomain so query table
+  $maxKey = ( CRM_Core_DAO::singleValueQuery("SELECT max(id) FROM civicrm_navigation"));
+  //find administer id
+  foreach ($params as $key => $attributes){
+    if($attributes['attributes']['label'] == 'Administer'){
+      $adminID = $key;
+      continue;
+    }
+  }
+  $params[$adminID]['child'][$maxKey+1]['attributes'] = array (
+    'label'      => 'Configure Settings',
+    'name'       => 'Configure Settings',
+    'url'        => 'civicrm/admin/setting',
+    'permission' => 'administer CiviCRM',
+    'operator'   => null,
+    'separator'  => null,
+    'parentID'   => $adminID,
+    'navID'      => $maxKey+1,
+    'active'     => 1
+  );
+  $domainCount = civicrm_api('domain', 'getcount', array('version' => 3));
+  $multiDomain = $domainCount > 1 ? 1 : 0;
+  $params[$adminID]['child'][$maxKey+2]['attributes'] = array (
+    'label'      => 'Configure MultiDomain Settings',
+    'name'       => 'Configure MultiDomain Settings',
+    'url'        => 'civicrm/admin/setting?domain=all',
+    'permission' => 'administer CiviCRM',
+    'operator'   => null,
+    'separator'  => null,
+    'parentID'   => $adminID,
+    'navID'      => $maxKey+2,
+    'active'     => $multiDomain,
+  );
+
+}
 /**
  * Implementation of hook_civicrm_install
  */
@@ -67,4 +104,37 @@ function setting_civicrm_upgrade($op, CRM_Queue_Queue $queue = NULL) {
  */
 function setting_civicrm_managed(&$entities) {
   return _setting_civix_civicrm_managed($entities);
+}
+
+function setting_civicrm_alterSettingsMetaData(&$settingsMetadata, $domainID, $profile){
+  $settingsProfiles = _setting_civicrm_getavailableprofiles();
+  foreach ($settingsProfiles as $settingsProfile){
+    $function = 'civicrm_settingapi_' . $settingsProfile;
+    $configured = $function($settingsMetadata, $domainID, $profile);
+  }
+
+  if(!empty($configured)){
+    return $configured;
+  }
+}
+/**
+ * Get profiles provided
+ *
+ * @return array profiles
+ */
+function _setting_civicrm_getavailableprofiles(){
+  $filePaths = array(CIVICRM_TEMPLATE_COMPILEDIR . '../profiles', __DIR__ . '/profiles');
+  static $profiles = array();
+  if(!empty($profiles)){
+    return $profiles;
+  }
+  foreach ($filePaths as $folder){
+    if(is_dir($folder)){
+      $files = CRM_Utils_File::findFiles($folder, '*.profile.php');
+      foreach ($files as $file){
+        $profiles[] = require_once $file;
+      }
+    }
+  }
+  return $profiles;
 }
