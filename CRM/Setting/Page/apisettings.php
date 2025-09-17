@@ -59,13 +59,13 @@ class CRM_Setting_Page_apisettings extends CRM_Core_Page {
       }
     }
 
-    $this->assign_by_ref('fields', $fields);
-    $this->assign_by_ref('settings', $settings);
-    $this->assign_by_ref('domains',$domains);
-    $this->assign_by_ref('profile', $profile);
-    $this->assign_by_ref('availableProfiles', $availableProfiles);
+    $this->assign('fields', $fields);
+    $this->assign('settings', $settings);
+    $this->assign('domains',$domains);
+    $this->assign('profile', $profile);
+    $this->assign('availableProfiles', $availableProfiles);
     // this is just for constructing the url - smary may have a better way
-    $this->assign_by_ref('domainstring', $domainString);
+    $this->assign('domainstring', $domainString);
     parent::run();
   }
 }
