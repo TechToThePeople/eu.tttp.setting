@@ -29,7 +29,7 @@ function setting_civicrm_navigationMenu(&$params){
       continue;
     }
   }
-  $params[$adminID]['child'][$maxKey+1]['attributes'] = array (
+  $params[$adminID]['child'][$maxKey+1]['attributes'] = [
     'label'      => 'Configure Settings',
     'name'       => 'Configure Settings',
     'url'        => 'civicrm/admin/setting',
@@ -39,10 +39,10 @@ function setting_civicrm_navigationMenu(&$params){
     'parentID'   => $adminID,
     'navID'      => $maxKey+1,
     'active'     => 1
-  );
-  $domainCount = civicrm_api('domain', 'getcount', array('version' => 3));
+  ];
+  $domainCount = civicrm_api('domain', 'getcount', ['version' => 3]);
   $multiDomain = $domainCount > 1 ? 1 : 0;
-  $params[$adminID]['child'][$maxKey+2]['attributes'] = array (
+  $params[$adminID]['child'][$maxKey+2]['attributes'] = [
     'label'      => 'Configure MultiDomain Settings',
     'name'       => 'Configure MultiDomain Settings',
     'url'        => 'civicrm/admin/setting?domain=all',
@@ -52,7 +52,7 @@ function setting_civicrm_navigationMenu(&$params){
     'parentID'   => $adminID,
     'navID'      => $maxKey+2,
     'active'     => $multiDomain,
-  );
+  ];
 
 }
 /**
@@ -123,8 +123,8 @@ function setting_civicrm_alterSettingsMetaData(&$settingsMetadata, $domainID, $p
  * @return array profiles
  */
 function _setting_civicrm_getavailableprofiles(){
-  $filePaths = array(CIVICRM_TEMPLATE_COMPILEDIR . '../profiles', __DIR__ . '/profiles');
-  static $profiles = array();
+  $filePaths = [CIVICRM_TEMPLATE_COMPILEDIR . '../profiles', __DIR__ . '/profiles'];
+  static $profiles = [];
   if(!empty($profiles)){
     return $profiles;
   }
